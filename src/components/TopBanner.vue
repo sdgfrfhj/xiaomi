@@ -1,11 +1,11 @@
 <template>
 	<div class="top-banner clearfix">
 		<div class="site-category"
-			@mouseleave="evtSideLeave">
+			@mouseleave="evtSideLeave($event)"> 
 			<div class="top-side-left">
 				<ul class="side-left">
 					<li class="side-item"
-						@mouseenter="evtSideEnter(item.type)"
+						@mouseenter="evtSideEnter(item.type,$event,$index)"
 						v-for="item in sideItems">
 						{{item.content}}
 					</li>
@@ -41,6 +41,7 @@ export default {
 		return {
 			currGoods: [],
 			goodsStatus: false,
+			indexItem: {},
 			sideItems: [
 				{type: 'phones', content: '手机 电话卡'},
 				{type: 'computer', content: '笔记本 平板'},
@@ -178,12 +179,24 @@ export default {
 		}
 	},
 	methods: {
-		evtSideEnter (currType) {
+		evtSideEnter (currType, event, index) {
 			this.currGoods = this[currType]
 			this.goodsStatus = true
+			this.indexItem = index
+			let $li = event.currentTarget
+			let cs = $li.parentElement.children
+			for (let i = 0; i < cs.length; i++) {
+				let csi = cs[i]
+				if (csi === $li) {
+					csi.classList.add('bgLi')
+				} else {
+					csi.classList.remove('bgLi')
+				}
+			}
 		},
-		evtSideLeave () {
+		evtSideLeave (event) {
 			this.goodsStatus = false
+			event.target.children[0].children[0].children[this.indexItem].className = 'side-item'
 		}
 	},
 	components: {
@@ -224,12 +237,11 @@ export default {
 		color: #fff;
 		text-align: center;
 		cursor: pointer;
-		&:hover {
-			background: #ff6700;
-		}
 	}
 }
-
+.bgLi {
+	background: #ff6700;
+}
 .site-category-detail {
 	position: absolute;
 	display: flex;
