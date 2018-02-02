@@ -1,16 +1,15 @@
 <template>
-	<div class="top-header">
+	<div class="top-header" @mouseleave="evtHeaderLeave()">
 		<div class="container">
 			<a href="#" class="icon-mi"></a>
 			<a href="#" class="pic-gif"></a>
 			<div class="header-navs">
-				<ul class="navs" @mouseleave="hideLine()">
+				<ul class="navs">
 				<li class="line"></li>
 					<li v-for="item in navs" class="nav" @mouseenter="showLine($event)">
 						<template v-if="item.type">
 							<a href="javascript: void(0);" class="nav-item"
 							@mouseenter="evtHeaderEnter(item.type)"
-							@mouseleave="evtHeaderLeave()"
 							>{{item.name}}</a>
 						</template>
 						<template v-else>
@@ -170,6 +169,10 @@ export default {
 			this.tids = setTimeout(function () {
 				self.headerStatus = false
 			}, 300)
+			$('.line').stop().animate({
+				'left': 0,
+				'width': 84
+			}, 500)
 		},
 		showLine (event) {
 			let _this = event.currentTarget
@@ -180,15 +183,6 @@ export default {
 			$('.line').css({'width': Liwidth, 'display': 'block'})
 			$('.line').stop().animate({
 				'left': spacing
-			}, 500)
-			console.log(spacing)
-		},
-		hideLine () {
-			let ulset = document.querySelector('.navs').offsetLeft
-			let width = $('.line').next().width()
-			$('.line').stop().animate({
-				'left': ulset,
-				'width': width
 			}, 500)
 		}
 	},
@@ -202,6 +196,7 @@ export default {
 	position: absolute;
 	top: 65px;
 	left: 0;
+	width: 84px;
 	height: 2px;
 	background:  #f30068;
 	display: block;
